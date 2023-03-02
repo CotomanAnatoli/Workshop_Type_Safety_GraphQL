@@ -173,8 +173,8 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient();
 
 async function main() {
-    await prisma.user.deleteMany({});
     await prisma.note.deleteMany({});
+    await prisma.user.deleteMany({});
     await prisma.user.create({
         data: {
             name: "Adam",
@@ -208,10 +208,12 @@ async function main() {
             }
         }
     })
+    
+    const user = await prisma.user.findFirstOrThrow({ where: { name: 'Ryan' } })
     await prisma.note.create({
         data: {
             message: 'Another note for  Ryan',
-            userId: 3
+            userId: user.id
         }
     })
 }
@@ -334,7 +336,7 @@ If you get stuck or need help figuring out how to properly instantiate the `Sche
   First, install `graphql-scalar`, where you will find a `Date` scalar type resolver.
   
   ```shell
-     npm i graphql-scalar
+     npm i graphql-scalars
   ```
   
   Then, whitin `builder.ts` add a `Date` scalar type that implements the `DateResolver` scalar from `graphql-scalars`.
@@ -522,6 +524,8 @@ Your GraphQL server can now be run and explored! Run the following command to st
   You can add it to your GraphQL server context to make it globally available via `ctx` argument in your resolvers.
   
   Add the `prisma` instance to the server context.
+
+  [Here](https://www.apollographql.com/docs/apollo-server/data/context) you can get information about apollo server context  
   
 <details><summary><b>Solution</b></summary>
 
@@ -582,6 +586,7 @@ For help, check out [this section](https://pothos-graphql.dev/docs/guide/fields#
     
     import { builder } from './builder'
 
+    import './models/Note'
     import './models/User'
 
     export const schema = builder.toSchema()
