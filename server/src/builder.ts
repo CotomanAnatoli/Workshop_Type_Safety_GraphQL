@@ -6,6 +6,7 @@ import { DateResolver } from 'graphql-scalars'
 
 export const builder = new SchemaBuilder<{
     PrismaTypes: PrismaTypes,
+    Context: { prisma: PrismaClient }
     Scalars: {
         Date: {
             Input: Date, Output: Date
